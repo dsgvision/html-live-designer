@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Live Designer</title>
+    <!-- Tailwind CSS einbinden -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- CKEditor Script einbinden -->
+    <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
+    <style>
+        body.dark {
+            background-color: #1a202c;
+            color: #a0aec0;
+        }
+        .dark .ck-content {
+            background-color: #2d3748;
+            color: #a0aec0;
+        }
+        .ck-content h1 {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: bold; /* font-bold */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .ck-content h2 {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: bold; /* font-bold */
+            margin-bottom: 0.75rem; /* mb-3 */
+        }
+        .ck-content h3 {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: bold; /* font-bold */
+            margin-bottom: 0.5rem; /* mb-2 */
+        }
+        .ck-content p {
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .ck-content ul {
+            list-style-type: disc; /* list-disc */
+            padding-left: 1rem; /* list-inside */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .ck-content ol {
+            list-style-type: decimal; /* list-decimal */
+            padding-left: 1rem; /* list-inside */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .scroll-sync {
+            height: 550px; /* Set a fixed height to enable scrolling */
+            overflow-y: scroll;
+            overflow: hidden;
+        }
+        .notification {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background-color: #48bb78; /* green-500 */
+            color: white;
+            padding: 1rem;
+            border-radius: 0.25rem; /* rounded */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+    </style>
+    <script>
+        // Toggle Dark Mode
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark');
+        }
+
+        // Funktion zum Kopieren des Codes in die Zwischenablage
+        function copyCode() {
+            var codeContent = document.getElementById('code').textContent;
+            navigator.clipboard.writeText(codeContent).then(function() {
+                showNotification('Code in die Zwischenablage kopiert!');
+            }, function(err) {
+                console.error('Fehler beim Kopieren des Codes: ', err);
+            });
+        }
+
+        // Funktion zum Anzeigen der Benachrichtigung
+        function showNotification(message) {
+            var notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerText = message;
+            document.body.appendChild(notification);
+
+            // Benachrichtigung einblenden
+            setTimeout(function() {
+                notification.style.opacity = 1;
+            }, 10);
+
+            // Benachrichtigung nach 3 Sekunden ausblenden und entfernen
+            setTimeout(function() {
+                notification.style.opacity = 0;
+                setTimeout(function() {
+                    document.body.removeChild(notification);
+                }, 500);
+            }, 3000);
+        }
+
+        // Funktion zum Umschalten der Vorschau-Sichtbarkeit
+        function togglePreview() {
+            var previewContainer = document.getElementById('preview-container');
+            previewContainer.classList.toggle('hidden');
+        }
+
+        // Initialisiere den CKEditor
+        function initializeEditor() {
+            CKEDITOR.replace('editor1', {
+                height: '400px'
+            });
+
+            CKEDITOR.instances.editor1.on('change', function() {
+                updateViews();
+            });
+
+            updateViews();
+        }
+
+        // Funktion zum Aktualisieren der Vorschau und des Codes
+        function updateViews() {
+            var editorData = CKEDITOR.instances.editor1.getData();
+            document.getElementById('preview').innerHTML = editorData;
+            document.getElementById('code').textContent = editorData;
+        }
+
+        // Synchronisiertes Scrollen
+        function syncScroll(element) {
+            var scrollTop = element.scrollTop;
+            document.querySelectorAll('.scroll-sync').forEach(function(syncElement) {
+                if (syncElement !== element) {
+                    syncElement.scrollTop = scrollTop;
+                }
+            });
+        }
+
+        // Event Listener hinzufügen für das synchronisierte Scrollen
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.scroll-sync').forEach(function(element) {
+                element.addEventListener('scroll', function() {
+                    syncScroll(element);
+                });
+            });
+
+            initializeEditor();
+        });
+
+        // Synchronisiertes Scrollen für den CKEditor
+        function syncEditorScroll() {
+            var editorIframe = document.querySelector('.cke_wysiwyg_frame');
+            var editorDocument = editorIframe.contentDocument || editorIframe.contentWindow.document;
+
+            editorDocument.addEventListener('scroll', function() {
+                var scrollTop = editorDocument.documentElement.scrollTop || editorDocument.body.scrollTop;
+                document.querySelectorAll('.scroll-sync').forEach(function(syncElement) {
+                    if (syncElement !== editorDocument) {
+                        syncElement.scrollTop = scrollTop;
+                    }
+                });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeEditor();
+            setTimeout(syncEditorScroll, 1000); // Delay to ensure CKEditor is fully loaded
+        });
+    </script>
+</head>
+<body class="bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100">
+    <div class="container mx-auto py-8">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold">HTML Live Designer</h1>
+            <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onclick="copyCode()">Code Kopieren</button>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="editor-container w-full scroll-sync">
+                <h2 class="text-xl font-semibold mb-4">Editor</h2>
+                <textarea id="editor1" class="w-full">Hier kannst du deinen Text schreiben und formatieren.</textarea>
+            </div>
+            <div id="preview-container" class="preview-container w-full pl-4  hidden scroll-sync">
+                <h2 class="text-xl font-semibold mb-4">Vorschau</h2>
+                <div id="preview" class="p-4 bg-gray-100 dark:bg-gray-700 rounded ck-content"></div>
+            </div>
+            <div class="code-container w-full pl-4  scroll-sync">
+                <div class="overflow-x-auto text-sm">
+                    <pre id="code" class="p-4 bg-gray-100 dark:bg-gray-700 rounded ck-content"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed bottom-4 right-4 flex space-x-4">
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="togglePreview()">Vorschau</button>
+        <button class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+    </div>
+</body>
+</html>
