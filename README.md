@@ -2,6 +2,8 @@
 
 Ein einfaches HTML Live-Design-Tool mit CKEditor und Tailwind CSS. Dieses Tool ermöglicht es, HTML-Code live zu bearbeiten, die Vorschau anzuzeigen und den HTML-Code zu kopieren.
 
+![HTML Live Designer Hero](html-live-designer-hero.png)
+
 ## Funktionen
 
 - Live-Editor mit CKEditor
@@ -31,6 +33,10 @@ Ein einfaches HTML Live-Design-Tool mit CKEditor und Tailwind CSS. Dieses Tool e
 - Ändere die Höhe des Editors und des Scrollbereichs nach Bedarf.
 - Passe das Styling durch Bearbeiten der Tailwind CSS Klassen an.
 
+## Demo
+
+Eine Live-Demo des Projekts findest du hier: [HTML Live Designer Demo](https://dsg.vision/html-live-designer.html)
+
 ## Lizenz
 
-Dieses Projekt steht unter der MIT-Lizenz.
+Dieses Projekt steht unter der MIT-Lizenz. Siehe die [LICENSE](LICENSE) Datei für weitere Details.
