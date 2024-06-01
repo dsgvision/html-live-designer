@@ -10,8 +10,8 @@ Ein einfaches HTML Live-Design-Tool mit CKEditor und Tailwind CSS. Dieses Tool e
 - Vorschau des HTML-Inhalts
 - Anzeige des generierten HTML-Codes
 - Synchronisiertes Scrollen zwischen Editor, Vorschau und Code
-- Dunkelmodus-Umschaltung
-- Kopieren des HTML-Codes in die Zwischenablage
+- Dark Mode
+- Direktes Kopieren des HTML-Codes
 
 ## Installation
 
